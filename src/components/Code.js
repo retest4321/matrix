@@ -12,6 +12,7 @@ const SYMBOL_WIDTH = 18;
 export default class Code extends Component {
   constructor(props) {
     super(props);
+    console.log('init');
 
     this.state = {
       codeLength: 0,
@@ -38,19 +39,27 @@ export default class Code extends Component {
     const xPosition = _.random(0, stepCount) * SYMBOL_WIDTH;
 
     // we divide by scale ratio because if it is small it is probably far => thus slower :)
-    const transition = ` top linear ${_.random(5, 10) / scaleRatio}s`; //different speed
+    this.animTime = _.random(5, 10) / scaleRatio;
+    const transition = ` top linear ${this.animTime}s`; //different speed
     const transform = `scale(${scaleRatio})`;
 
+    
     this.setState({ codeLength, yPosition, xPosition, transition, transform });
   }
 
   componentDidMount() {
-    const startTime = _.random(300, 10000); // each starts in different time
+    const startTime = _.random(0, 3000); // each starts in different time
 
     setTimeout(() => {
+      // console.log('asd');
       const newHeight = window.innerHeight + this.state.yPosition;
       this.setState({ yPosition: -newHeight }); //must be - b/c of start
     }, startTime);
+
+    setTimeout(() => {
+      // console.log('timeout');
+      this.props.deleteSelf();
+    }, this.animTime * 1000 + startTime);
   }
 
   render() {
